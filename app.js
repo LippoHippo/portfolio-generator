@@ -1,6 +1,6 @@
 const inquirer = require('inquirer');
-// const fs = require('fs');
-// const generatePage = require('./src/page-template');
+const fs = require('fs');
+const generatePage = require('./src/page-template');
 
 // const pageHTML = generatePage(name, github);
 
@@ -37,14 +37,19 @@ const promptUser = () => {
             }
         },
         {
+            type: 'confirm',
+            name: 'confirmAbout',
+            message: 'Would you like to enter some information about yourself for an "About" section?',
+            default: true
+        },
+        {
             type: 'input',
             name: 'about',
             message: 'Provide some information about yourself:',
-            validate: nameInput => {
-                if (nameInput) {
+            when: ({confirmAbout}) => {
+                if (confirmAbout) {
                     return true;
                 } else {
-                    console.log('Tell us a little bit about yourself');
                     return false;
                 }
             }
@@ -53,14 +58,14 @@ const promptUser = () => {
 };
 
 const promptProject = portfolioData => {
-    if (!portfolioData.projects) {
-        portfolioData.projects = [];
-    }
     console.log(`
     =================
     Add a New Project
     =================
     `);
+        if (!portfolioData.projects) {
+            portfolioData.projects = [];
+        }
         return inquirer.prompt([
             {
                 type: 'input',
